@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AppBox · 我做的小程序都放在这里</title>
+  <meta name="description" content="AppBox — 一个属于你自己的程序盒子。程序存在自己的存储空间里，打开就能用，每个程序都附带使用方法。">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b7cfa'/%3E%3Crect x='8' y='8' width='7' height='7' rx='2' fill='white'/%3E%3Crect x='17' y='8' width='7' height='7' rx='2' fill='white'/%3E%3Crect x='8' y='17' width='7' height='7' rx='2' fill='white'/%3E%3Crect x='17' y='17' width='7' height='7' rx='2' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" id="brandMark">▦</span>
+        <span class="brand-name" id="brandName">AppBox</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#/" data-nav="store" class="is-active">商店</a>
+        <a href="#/guide" data-nav="guide">使用指南</a>
+        <a href="#/upload" data-nav="upload">上传</a>
+      </nav>
+      <div class="header-tools">
+        <label class="search">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="搜索程序或关键词…" autocomplete="off" aria-label="搜索程序">
+        </label>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="切换深色模式">☾</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 商店首页 ============ -->
+    <section id="view-store" class="view">
+      <div class="wrap">
+        <section class="hero">
+          <p class="hero-kicker">PERSONAL APP STORE</p>
+          <h1>我做的小程序<br><span class="grad">都放在这里</span></h1>
+          <p class="hero-sub" id="heroSub">程序存在 AppBox 里，打开就能用，每个都附带使用方法。</p>
+          <div class="hero-stats">
+            <div class="stat"><strong id="statApps">0</strong><span>个程序</span></div>
+            <div class="stat"><strong id="statCats">0</strong><span>个分类</span></div>
+          </div>
+        </section>
+
+        <div class="toolbar">
+          <div class="chips" id="categoryChips" role="group" aria-label="按分类筛选"></div>
+          <p class="result-count" id="resultCount" aria-live="polite"></p>
+        </div>
+
+        <div class="grid" id="appGrid"></div>
+
+        <div class="empty" id="emptyState" hidden>
+          <div class="empty-icon" aria-hidden="true">⌕</div>
+          <p>没有找到匹配的程序</p>
+          <button class="btn ghost" id="clearSearch" type="button">清空搜索</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 程序详情（由 JS 渲染） ============ -->
+    <section id="view-app" class="view" hidden></section>
+
+    <!-- ============ 上传程序 ============ -->
+    <section id="view-upload" class="view" hidden>
+      <div class="wrap upload">
+        <header class="upload-hero">
+          <p class="hero-kicker">PUBLISH</p>
+          <h1>上传程序</h1>
+          <p class="guide-lead">程序会提交进 AppBox 的仓库/存储空间：网页程序在线打开，安装包和压缩包提供下载。上传需要密码。</p>
+        </header>
+
+        <div class="panel auth-panel" id="authPanel">
+          <h2>输入上传密码</h2>
+          <p class="muted" id="authHint">上传前需要密码。</p>
+          <div class="auth-row">
+            <input type="password" id="tokenInput" placeholder="上传密码" autocomplete="off">
+            <button class="btn primary" id="tokenBtn" type="button">解锁上传</button>
+          </div>
+          <p class="form-msg" id="authMsg"></p>
+        </div>
+
+        <div class="panel" id="githubSetup" hidden>
+          <h2>还差几步，把 AppBox 挂到 GitHub</h2>
+          <ol class="setup-list">
+            <li>创建一个<strong>公开仓库</strong>（例如 <code>AppBox</code>），把整个项目推上去。</li>
+            <li>仓库 <strong>Settings → Pages</strong>，选择 Deploy from a branch，分支选 <code>main</code>，目录选 <code>/(root)</code>。</li>
+            <li>打开 <code>assets/config.js</code>，把 <code>owner</code> 填成你的 GitHub 用户名，<code>repo</code> 填仓库名，保存并推送。</li>
+            <li>创建细粒度令牌：GitHub 头像 → Settings → Developer settings → Personal access tokens → Fine-grained tokens。只授权这个仓库，权限选 <code>Contents: Read and write</code>。</li>
+            <li>回到这个页面刷新，输入上传密码，再粘贴一次令牌即可。</li>
+          </ol>
+          <p class="form-hint">令牌只保存在你的浏览器里，并用上传密码加密，不会写进仓库。Pages 每次发布后约 1 分钟生效。</p>
+          <a class="btn ghost" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">创建 GitHub 令牌</a>
+        </div>
+
+        <div class="panel" id="tokenPanel" hidden>
+          <h2>设置 GitHub 写入令牌</h2>
+          <p class="muted">
+            粘贴一次细粒度令牌（<code>Contents: Read and write</code>）。它只会加密保存在本机浏览器，
+            不会上传到任何服务器，也不会进仓库。换密码或换电脑时重新粘贴即可。
+          </p>
+          <div class="auth-row">
+            <input type="password" id="ghTokenInput" placeholder="github_pat_..." autocomplete="off">
+            <button class="btn primary" id="ghTokenBtn" type="button">保存令牌</button>
+          </div>
+          <p class="form-msg" id="ghTokenMsg"></p>
+        </div>
+
+        <form class="panel upload-form" id="uploadForm" hidden>
+          <h2>程序信息</h2>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>类型</span>
+              <select id="fKind">
+                <option value="web">网页程序 · 上传 zip，站内打开</option>
+                <option value="link">外部网址 · 新窗口打开</option>
+                <option value="download">可下载文件 · 安装包 / 压缩包</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>名称</span>
+              <input id="fName" maxlength="60" placeholder="例如：英词通">
+            </label>
+            <label class="field">
+              <span>链接标识</span>
+              <input id="fId" maxlength="40" placeholder="例如：yingcitong">
+              <span class="form-hint">小写字母、数字、短横线。详情页链接会用它，例如 #/app/yingcitong</span>
+            </label>
+            <label class="field">
+              <span>一句话介绍</span>
+              <input id="fTagline" maxlength="80" placeholder="显示在卡片上，越短越好">
+            </label>
+            <label class="field">
+              <span>分类</span>
+              <input id="fCategory" maxlength="20" placeholder="例如：语言学习">
+            </label>
+            <label class="field">
+              <span>图标</span>
+              <input id="fIcon" maxlength="6" placeholder="一个字符，例如 Aa、越、⚗">
+            </label>
+            <label class="field">
+              <span>主题色</span>
+              <input id="fAccent" type="color" value="#5b7cfa">
+            </label>
+            <label class="field">
+              <span>标签</span>
+              <input id="fTags" placeholder="用逗号分隔，例如：英语, 单词">
+            </label>
+          </div>
+
+          <div class="field" id="urlField" hidden>
+            <span>网址</span>
+            <input id="fUrl" placeholder="https://example.com/你的程序">
+            <span class="form-hint">外部网址会在新窗口打开；如果对方网站不允许被嵌入，站内打开会自动关闭。</span>
+          </div>
+
+          <div class="field" id="fileField">
+            <span id="fileLabel">程序压缩包（zip）</span>
+            <input id="fFile" type="file" accept=".zip">
+            <span class="form-hint" id="fileHint">把网页程序文件夹压成 zip，压缩包里最外层要有 index.html。</span>
+          </div>
+
+          <div class="form-grid">
+            <label class="field wide">
+              <span>详细介绍</span>
+              <textarea id="fDesc" rows="4" placeholder="这个程序是做什么的，适合谁用。空一行会分成新段落。"></textarea>
+            </label>
+            <label class="field wide">
+              <span>使用方法（一行一步，格式：标题 | 说明）</span>
+              <textarea id="fUsage" rows="4" placeholder="打开程序 | 点击开始按钮&#10;选择词库 | 选今天要背的一组"></textarea>
+            </label>
+            <label class="field wide">
+              <span>小提示（一行一条）</span>
+              <textarea id="fTips" rows="2" placeholder="每天 10 分钟就够"></textarea>
+            </label>
+          </div>
+
+          <div class="checks">
+            <label><input type="checkbox" id="fFeatured"> 标记为推荐</label>
+            <label><input type="checkbox" id="fEmbed" checked> 允许站内打开（仅网页程序）</label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn primary" id="submitBtn" type="submit">上传并发布</button>
+            <span class="form-msg" id="formMsg"></span>
+          </div>
+          <p class="publish-note" id="publishNote" hidden></p>
+        </form>
+
+        <div class="panel" id="managePanel" hidden>
+          <h2>已发布的程序</h2>
+          <p class="muted">重新上传同一个链接标识会覆盖旧程序；删除会同时清掉存储里的文件。</p>
+          <ul class="manage-list" id="manageList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 使用指南 ============ -->
+    <section id="view-guide" class="view" hidden>
+      <div class="wrap guide">
+        <header class="guide-hero">
+          <p class="hero-kicker">HOW TO USE</p>
+          <h1>使用指南</h1>
+          <p class="guide-lead">AppBox 可以免费挂在 GitHub Pages 上：网页程序在线打开，安装包提供下载，上传需要密码。下面是完整用法。</p>
+          <div class="toc">
+            <button class="chip" type="button" data-scroll="sec-use">怎么用这个站</button>
+            <button class="chip" type="button" data-scroll="sec-type">三种程序类型</button>
+            <button class="chip" type="button" data-scroll="sec-add">上传程序</button>
+            <button class="chip" type="button" data-scroll="sec-github">GitHub 上线</button>
+            <button class="chip" type="button" data-scroll="sec-faq">常见问题</button>
+          </div>
+        </header>
+
+        <section class="guide-sec" id="sec-use">
+          <h2><span class="step-num">1</span>怎么用这个站</h2>
+          <ul class="plain">
+            <li><strong>浏览：</strong>首页的卡片就是所有程序，点进去能看到介绍和具体的使用方法。</li>
+            <li><strong>查找：</strong>右上角可以搜名字、标签和介绍；顶部的分类可以只看某一类。</li>
+            <li><strong>打开：</strong>网页程序会在站内窗口直接运行，也可以单独开一页；可下载文件会触发下载。</li>
+            <li><strong>分享：</strong>每个程序都有独立链接，点「复制链接」发给别人，对方打开就直接到那个程序。</li>
+          </ul>
+          <div class="callout">手机上也能用，页面会自动适配窄屏。站点发布到网上之后，发给朋友一个网址就够了。</div>
+        </section>
+
+        <section class="guide-sec" id="sec-type">
+          <h2><span class="step-num">2</span>三种程序类型</h2>
+          <p>上传时按程序的实际形态选一种即可：</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>类型</th><th>适合什么</th><th>访客看到</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>网页程序</strong></td>
+                  <td>HTML / CSS / JS 做的工具、小游戏、练习页</td>
+                  <td>「打开程序」，在站内窗口里运行</td>
+                </tr>
+                <tr>
+                  <td><strong>外部网址</strong></td>
+                  <td>已经部署在别处的网页</td>
+                  <td>「打开链接」，新窗口跳转</td>
+                </tr>
+                <tr>
+                  <td><strong>可下载文件</strong></td>
+                  <td>exe、apk、zip、安装包、文档</td>
+                  <td>「下载程序」，从 AppBox 下载</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">网页程序只能访问自己目录里的文件。如果程序需要读取用户电脑上的文件，请用「可下载文件」或改成让用户手动选择文件。</div>
+        </section>
+
+        <section class="guide-sec" id="sec-add">
+          <h2><span class="step-num">3</span>上传程序</h2>
+
+          <div class="guide-step">
+            <h3>第一步：打开站点</h3>
+            <p><strong>GitHub 模式：</strong>直接访问你的 Pages 地址，一般是 <code>https://用户名.github.io/仓库名/</code>。</p>
+            <p><strong>本地模式：</strong>双击 <code>start.bat</code>，浏览器会自动打开 http://localhost:8080 。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>第二步：输入上传密码</h3>
+            <p>点顶部「上传」，输入上传密码。密码在 <code>assets/config.js</code> 里以哈希形式保存，不存明文。</p>
+            <p>GitHub 模式下第一次还需要粘贴一次 GitHub 写入令牌。令牌只保存在本机浏览器里，用密码加密，不会进仓库；换电脑或换密码时重新粘贴即可。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>第三步：填写程序信息</h3>
+            <p>名称和「链接标识」是必填的。链接标识决定详情页地址，只能用<strong>小写字母、数字和短横线</strong>，例如 <code>yingcitong</code>。图标可以填一个字符，也可以用 <code>assets/</code> 下的图片路径。</p>
+            <p>「使用方法」一行写一步，用竖线分开标题和说明，例如：</p>
+            <pre class="tree">打开程序 | 点击开始按钮
+选择词库 | 选今天要背的一组
+开始记忆 | 认识的点「认识」，不熟的点「再记一次」</pre>
+          </div>
+
+          <div class="guide-step">
+            <h3>第四步：选文件或填网址</h3>
+            <ul class="plain">
+              <li><strong>网页程序：</strong>选择整个程序文件夹，最外层要有 <code>index.html</code>。GitHub 模式会逐个文件提交到 <code>apps/标识/</code>；本地模式上传 zip，服务器会解压到同一位置。</li>
+              <li><strong>外部网址：</strong>直接填以 <code>http://</code> 或 <code>https://</code> 开头的地址。</li>
+              <li><strong>可下载文件：</strong>选一个文件，提交到 <code>files/</code>，访客点按钮就下载。</li>
+            </ul>
+            <p>GitHub 免费仓库单文件上限 100 MB，Pages 站点总量 1 GB，所以上传页把单个文件限制在 50 MB；更大的安装包建议放到 GitHub Releases。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>第五步：发布</h3>
+            <p>点「上传并发布」。GitHub 模式会把文件和信息提交到仓库，Pages 大约 1 分钟后更新；本地模式会立即生效。要换版本时，用<strong>同一个链接标识</strong>重新上传，会覆盖旧程序。</p>
+          </div>
+        </section>
+
+        <section class="guide-sec" id="sec-github">
+          <h2><span class="step-num">4</span>GitHub 免费上线</h2>
+          <p>AppBox 的 GitHub 模式是纯静态的，不需要服务器，也不需要付费：</p>
+
+          <div class="guide-step">
+            <h3>1. 推送仓库</h3>
+            <p>在 GitHub 新建一个<strong>公开仓库</strong>（建议叫 <code>AppBox</code>），把整个项目推上去。免费账号的 Pages 只能发布公开仓库，所以程序源码和文件都是公开的。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>2. 打开 Pages</h3>
+            <p>仓库 <strong>Settings → Pages</strong>，Source 选 <code>Deploy from a branch</code>，分支选 <code>main</code>，目录选 <code>/(root)</code>。保存后等一两分钟。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>3. 填仓库信息</h3>
+            <p>打开 <code>assets/config.js</code>，把 <code>mode</code> 保持为 <code>github</code>，填好 <code>owner</code>（用户名）和 <code>repo</code>（仓库名），推送后刷新站点。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>4. 创建写入令牌</h3>
+            <p>GitHub 头像 → Settings → Developer settings → Personal access tokens → Fine-grained tokens，新建令牌：只授权这个仓库，把 <code>Contents</code> 权限设为 <code>Read and write</code>。复制令牌，回到上传页粘贴一次。</p>
+          </div>
+
+          <div class="guide-step">
+            <h3>5. 上传并等待部署</h3>
+            <p>上传后，内容会作为一次提交进入仓库，Pages 自动重新发布，通常 1 分钟左右生效。可以在仓库的 Actions 页面看部署进度。</p>
+          </div>
+
+          <div class="callout">
+            <strong>免费额度：</strong>Pages 站点不超过 1 GB，带宽约 100 GB/月，仓库单文件上限 100 MB；单个 Release 文件小于 2 GiB。
+            学习类小工具完全够用。更大的安装包请放到 GitHub Releases，再在商店里填外部网址。
+          </div>
+
+          <p>目录结构很简单：网页程序在 <code>apps/标识/</code>，下载文件在 <code>files/</code>，程序列表在 <code>data/apps.json</code>。备份就是 <code>git clone</code>，换电脑不会丢。</p>
+          <p><strong>本地预览：</strong>把 <code>mode</code> 改成 <code>server</code>，双击 <code>start.bat</code>，上传会保存到本机；再改回 <code>github</code> 推送即可上线。</p>
+        </section>
+
+        <section class="guide-sec" id="sec-faq">
+          <h2><span class="step-num">5</span>常见问题</h2>
+          <dl class="faq">
+            <dt>为什么不能直接放一个本地 HTML 链接？</dt>
+            <dd>本地路径只有你这台电脑能打开，别人访问会 404。现在程序提交到 GitHub 仓库，通过 Pages 网址访问，谁打开链接都能用。</dd>
+            <dt>上传密码不正确？</dt>
+            <dd>密码只认 <code>assets/config.js</code> 里 <code>passwordHash</code> 对应的那一个，区分大小写，前后不要带空格。忘记密码时，用文件顶部注释里的命令重新生成哈希并替换。</dd>
+            <dt>提示 GitHub 令牌无效或没有权限？</dt>
+            <dd>令牌需要只授权当前仓库，并给了 <code>Contents: Read and write</code>；过期、复制不完整、或授权了别的仓库都会失败。重新生成一个再粘贴即可。</dd>
+            <dt>发布后打开是 404 或旧页面？</dt>
+            <dd>GitHub Pages 需要 1 分钟左右重新部署，去仓库 Actions 看进度。网页程序要确认文件夹最外层有 <code>index.html</code>；本地模式上传 zip 时也一样。</dd>
+            <dt>网页程序为什么读不到电脑里的文件？</dt>
+            <dd>网页程序运行在浏览器沙箱里，只能访问自己目录里的文件。需要读写本地文件时，选「可下载文件」，或让程序提供文件选择按钮。</dd>
+            <dt>怎么更新已经发布的程序？</dt>
+            <dd>在「上传」页用同一个链接标识重新提交，旧条目和文件会被覆盖。只想改介绍文字，也可以重新填写信息后提交。</dd>
+            <dt>上传的文件存在哪？怎么备份？</dt>
+            <dd>网页程序在 <code>apps/</code>，下载文件在 <code>files/</code>，信息在 <code>data/apps.json</code>，都在仓库里。备份就是 <code>git clone</code> 或复制整个项目。</dd>
+            <dt>密码能真正保护上传吗？</dt>
+            <dd>密码只用于本机解锁和加密令牌；真正拦住写入的是 GitHub 令牌。因此仓库里看不到密码明文，也看不到令牌明文。请不要把密码和令牌发给别人。</dd>
+            <dt>手机能上传吗？</dt>
+            <dd>能，打开同一网址、输入密码并粘贴一次令牌即可。大文件和文件夹建议用电脑上传，更稳定。</dd>
+          </dl>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span id="footerText">个人程序盒子 · 持续更新中</span>
+      <span>© <span id="footerYear">2026</span> AppBox</span>
+    </div>
+  </footer>
+
+  <!-- ============ 站内浏览器窗口 ============ -->
+  <div class="embed-layer" id="embedLayer" hidden>
+    <div class="embed-shell">
+      <div class="embed-bar">
+        <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="embed-title" id="embedTitle">程序</span>
+        <div class="embed-actions">
+          <button class="btn ghost sm" id="embedNewWindow" type="button">↗ 新窗口</button>
+          <button class="btn primary sm" id="embedClose" type="button">关闭</button>
+        </div>
+      </div>
+      <iframe class="embed-frame" id="embedFrame" src="about:blank" title="程序窗口"></iframe>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/github.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
