@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>越词通</title>
+  <style>
+    :root { --accent: #e8503a; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(900px 520px at 50% -12%, rgba(232, 80, 58, .18), transparent 70%),
+        #f5f6fa;
+      color: #15171d;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    .slot {
+      width: min(520px, 100%);
+      padding: 40px 36px;
+      text-align: center;
+      background: #fff;
+      border: 1px solid rgba(20, 24, 36, .08);
+      border-radius: 24px;
+      box-shadow: 0 26px 60px -32px rgba(16, 20, 32, .32);
+    }
+    .icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: linear-gradient(140deg, rgba(232, 80, 58, .24), rgba(232, 80, 58, .06));
+      border: 1px solid rgba(232, 80, 58, .18);
+      font-size: 28px;
+      font-weight: 700;
+    }
+    h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -.02em; }
+    .tag { margin: 0 0 22px; color: #6a7180; font-size: 14.5px; }
+    .note {
+      margin: 0 0 26px;
+      padding: 14px 16px;
+      text-align: left;
+      background: #f5f6fa;
+      border: 1px solid rgba(20, 24, 36, .06);
+      border-radius: 12px;
+      color: #6a7180;
+      font-size: 13.8px;
+      line-height: 1.8;
+    }
+    code {
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(20, 24, 36, .06);
+      font-family: ui-monospace, Consolas, "Courier New", monospace;
+      font-size: .92em;
+    }
+    .back {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="slot">
+    <div class="icon">越</div>
+    <h1>越词通</h1>
+    <p class="tag">示例占位页 · 等待上传实际程序</p>
+    <p class="note">这是示例占位页。在 AppBox 的「上传」页选择「网页程序」，上传「越词通」的 zip 压缩包就会覆盖这里，商店里的卡片和介绍会一起更新。</p>
+    <a class="back" href="../../index.html#/app/yuecitong" target="_top">← 返回商店</a>
+  </main>
+</body>
+</html>
