@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+data/admin-token.txt
+data/apps.json.tmp
+.tmp/
+server.log
+.token
+.env
