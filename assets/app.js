@@ -1075,7 +1075,7 @@
     if (remaining.length === catalog.length) throw new Error('仓库里没有找到这个程序');
 
     const entries = [];
-    if (kindOf(app) === 'web') {
+    if (kindOf(app) === 'web' && !isExternal(app.url)) {
       const tree = await GH.getTree(options);
       const prefix = 'apps/' + app.id + '/';
       const hits = tree.items.filter(
