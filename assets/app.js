@@ -368,7 +368,11 @@
     if (app.version) metaRows.push(['版本', app.version]);
     if (app.updated) metaRows.push(['更新', app.updated]);
     if (download && app.size) metaRows.push(['大小', formatBytes(app.size)]);
-    metaRows.push(['打开方式', download ? '下载文件' : external ? '外部链接' : '站内运行']);
+    const externalWeb = kind === 'web' && isExternal(app.url);
+    metaRows.push([
+      '打开方式',
+      download ? '下载文件' : external ? '外部链接' : externalWeb ? '站内嵌入' : '站内运行'
+    ]);
 
     let actions = '';
     if (app.url) {

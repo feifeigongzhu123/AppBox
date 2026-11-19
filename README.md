@@ -37,6 +37,17 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 把结果填进 `passwordHash`。改完后，浏览器里保存的令牌会解密失败，需要重新粘贴一次。
 密码只用于本机解锁和令牌加密，真正阻止别人写入的是 GitHub 令牌；建议用足够长的密码。
 
+## 目前挂上的程序
+
+| 程序 | 地址 | 打开方式 |
+| --- | --- | --- |
+| 英词通 1.7.1 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
+| 越词通 1.1.0 | https://feifeigongzhu123.github.io/viet-daily/ | 站内嵌入 / 新窗口 |
+| 化学动画课 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
+
+这三个程序已经部署在同一个 GitHub Pages 账号下，AppBox 只负责展示、搜索和使用说明。
+`data/apps.json` 里它们的 `kind` 是 `web`，`url` 是完整网址，所以详情页会优先在站内窗口打开。
+
 ## 三种程序类型
 
 | 类型 | 上传内容 | 访客看到 |
@@ -59,10 +70,8 @@ AppBox/
 ├─ data/
 │  ├─ apps.json            ★ 已发布程序的列表
 │  └─ admin-token.txt      本地模式的密码（不提交到仓库）
-├─ apps/                   网页程序，一个程序一个文件夹
-│  ├─ yingcitong/index.html
-│  ├─ yuecitong/index.html
-│  └─ huaxue/index.html
+├─ apps/                   上传的网页程序目录（当前为空）
+│  └─ .gitkeep
 ├─ files/                  可下载文件
 ├─ server.py               可选：本地预览服务器
 ├─ start.bat               本地启动
