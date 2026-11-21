@@ -519,7 +519,10 @@
           try {
             const response = await fetch(app.versionUrl, { cache: 'no-store' });
             if (!response.ok) return;
-            const text = (await response.text()).trim().replace(/^\uFEFF/, '');
+            const text = (await response.text())
+              .trim()
+              .replace(/^\uFEFF/, '')
+              .replace(/^v/i, '');
             if (!/^[0-9A-Za-z][0-9A-Za-z._+\- ]{0,24}$/.test(text)) return;
             version = text;
             try {
