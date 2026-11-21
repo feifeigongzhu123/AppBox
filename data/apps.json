@@ -9,6 +9,7 @@
     "tags": ["英语", "单词", "外研版", "听读", "跟读", "复习"],
     "kind": "web",
     "url": "https://feifeigongzhu123.github.io/english-daily/",
+    "versionUrl": "https://feifeigongzhu123.github.io/english-daily/VERSION",
     "embed": true,
     "featured": true,
     "description": "外研版初中、高中英语词汇听读与课文跟读工具。内置 18 册、135 个单元、约 5200 个词条，把看单词、听发音、跟读、复习和每日打卡放在一个页面里；学习记录只保存在本机。",
@@ -35,7 +36,7 @@
       "首次播放声音前先点一下页面，浏览器才允许自动播放。",
       "学习进度保存在当前浏览器，清除站点数据会丢失。"
     ],
-    "version": "1.7.1",
+    "version": "1.9.0",
     "updated": "2026-11-19",
     "size": 0,
     "download": false
@@ -50,6 +51,7 @@
     "tags": ["越南语", "词汇", "发音", "间隔复习"],
     "kind": "web",
     "url": "https://feifeigongzhu123.github.io/viet-daily/",
+    "versionUrl": "https://feifeigongzhu123.github.io/viet-daily/VERSION",
     "embed": true,
     "featured": true,
     "description": "每天学几个越南语单词的 PWA。内置 1016 个词，配河内音 IPA、近似读音、越南语例句和 2077 条音频；按间隔重复安排每日计划，可安装到安卓桌面离线使用。",
@@ -91,6 +93,7 @@
     "tags": ["化学", "初中", "高中", "动画", "练习"],
     "kind": "web",
     "url": "https://feifeigongzhu123.github.io/chemistry-course/",
+    "versionUrl": "https://feifeigongzhu123.github.io/chemistry-course/VERSION",
     "embed": true,
     "featured": false,
     "description": "初中到高三的化学动画精讲，共 78 个知识点：初中 33 点、高一 23 点、高二 8 点、高三 14 点。每个知识点有 3 步动画、语音讲解和 5 道练习题，适合预习和复习。",
@@ -117,7 +120,7 @@
       "学段首页可以下载整学段语音，离线也能听。",
       "题目是真题改编，不是原卷。"
     ],
-    "version": "",
+    "version": "1.2.0",
     "updated": "2026-11-19",
     "size": 0,
     "download": false

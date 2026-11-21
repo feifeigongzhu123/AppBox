@@ -220,7 +220,7 @@
           <ul class="plain">
             <li><strong>浏览：</strong>首页的卡片就是所有程序，点进去能看到介绍和具体的使用方法。</li>
             <li><strong>查找：</strong>右上角可以搜名字、标签和介绍；顶部的分类可以只看某一类。</li>
-            <li><strong>打开：</strong>网页程序会在站内窗口直接运行，也可以单独开一页；可下载文件会触发下载。</li>
+            <li><strong>打开：</strong>网页程序会在站内窗口直接运行，也可以单独开一页；可下载文件会触发下载。应用升级后重新打开就是新版，如果看到旧页面，点窗口右上角「刷新」。</li>
             <li><strong>分享：</strong>每个程序都有独立链接，点「复制链接」发给别人，对方打开就直接到那个程序。</li>
           </ul>
           <div class="callout">手机上也能用，页面会自动适配窄屏。站点发布到网上之后，发给朋友一个网址就够了。</div>
@@ -349,6 +349,8 @@
             <dd>网页程序运行在浏览器沙箱里，只能访问自己目录里的文件。需要读写本地文件时，选「可下载文件」，或让程序提供文件选择按钮。</dd>
             <dt>怎么更新已经发布的程序？</dt>
             <dd>在「上传」页用同一个链接标识重新提交，旧条目和文件会被覆盖。只想改介绍文字，也可以重新填写信息后提交。</dd>
+            <dt>嵌入的应用升级后，AppBox 会自动更新吗？</dt>
+            <dd>应用本身是直接加载原网址，升级发布后打开就是新版；AppBox 还会读取各站点的 VERSION 文件，自动更新详情页显示的版本号。浏览器或 Service Worker 可能缓存旧资源，必要时点站内窗口的「刷新」。</dd>
             <dt>上传的文件存在哪？怎么备份？</dt>
             <dd>网页程序在 <code>apps/</code>，下载文件在 <code>files/</code>，信息在 <code>data/apps.json</code>，都在仓库里。备份就是 <code>git clone</code> 或复制整个项目。</dd>
             <dt>密码能真正保护上传吗？</dt>
@@ -375,6 +377,7 @@
         <span class="traffic" aria-hidden="true"><i></i><i></i><i></i></span>
         <span class="embed-title" id="embedTitle">程序</span>
         <div class="embed-actions">
+          <button class="btn ghost sm" id="embedReload" type="button">⟳ 刷新</button>
           <button class="btn ghost sm" id="embedNewWindow" type="button">↗ 新窗口</button>
           <button class="btn primary sm" id="embedClose" type="button">关闭</button>
         </div>

@@ -41,12 +41,15 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 
 | 程序 | 地址 | 打开方式 |
 | --- | --- | --- |
-| 英词通 1.7.1 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
+| 英词通 1.9.0 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
 | 越词通 1.1.0 | https://feifeigongzhu123.github.io/viet-daily/ | 站内嵌入 / 新窗口 |
-| 化学动画课 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
+| 化学动画课 1.2.0 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
 
 这三个程序已经部署在同一个 GitHub Pages 账号下，AppBox 只负责展示、搜索和使用说明。
 `data/apps.json` 里它们的 `kind` 是 `web`，`url` 是完整网址，所以详情页会优先在站内窗口打开。
+
+详情页会读取各站点的 `VERSION` 文件，自动更新显示的版本号。应用内容本身是直接嵌入原网址，
+升级部署后打开就是新版；浏览器或 Service Worker 可能缓存旧资源，站内窗口右上角有「刷新」按钮。
 
 ## 三种程序类型
 

@@ -23,8 +23,11 @@
   let authed = false;
   let authPassword = '';
   let ghToken = '';
+  let embedAppUrl = '';
+  let embedAppId = '';
 
   const state = { query: '', category: '全部' };
+  const VERSION_TTL = 5 * 60 * 1000;
 
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -456,6 +459,8 @@
   /* ---------------- 站内窗口 ---------------- */
 
   function openEmbed(app) {
+    embedAppId = app.id;
+    embedAppUrl = app.url;
     $('#embedTitle').textContent = app.name;
     embedFrame.src = app.url;
     embedLayer.hidden = false;
@@ -467,7 +472,84 @@
     if (embedLayer.hidden) return;
     embedLayer.hidden = true;
     embedFrame.src = 'about:blank';
+    embedAppUrl = '';
+    embedAppId = '';
     document.body.classList.remove('no-scroll');
+  }
+
+  function reloadEmbed() {
+    if (!embedAppUrl) return;
+    const base = embedAppUrl.split('#')[0];
+    const separator = base.indexOf('?') === -1 ? '?' : '&';
+    embedFrame.src = base + separator + 'appbox_refresh=' + Date.now();
+    if (embedAppId) {
+      try {
+        sessionStorage.removeItem('appbox-version:' + embedAppId);
+      } catch (err) {
+        /* ignore */
+      }
+      checkVersions();
+    }
+  }
+
+  async function checkVersions() {
+    const targets = apps.filter(
+      app => app.versionUrl && /^https?:\/\//i.test(app.versionUrl)
+    );
+    if (!targets.length) return;
+
+    let changed = false;
+    await Promise.all(
+      targets.map(async app => {
+        const key = 'appbox-version:' + app.id;
+        let version = '';
+        try {
+          const raw = sessionStorage.getItem(key);
+          if (raw) {
+            const cached = JSON.parse(raw);
+            if (cached && cached.v && Date.now() - cached.t < VERSION_TTL) {
+              version = cached.v;
+            }
+          }
+        } catch (err) {
+          /* ignore */
+        }
+
+        if (!version) {
+          try {
+            const response = await fetch(app.versionUrl, { cache: 'no-store' });
+            if (!response.ok) return;
+            const text = (await response.text()).trim().replace(/^\uFEFF/, '');
+            if (!/^[0-9A-Za-z][0-9A-Za-z._+\- ]{0,24}$/.test(text)) return;
+            version = text;
+            try {
+              sessionStorage.setItem(
+                key,
+                JSON.stringify({ v: version, t: Date.now() })
+              );
+            } catch (err) {
+              /* ignore */
+            }
+          } catch (err) {
+            return;
+          }
+        }
+
+        if (version && app.version !== version) {
+          app.version = version;
+          changed = true;
+        }
+      })
+    );
+
+    if (!changed) return;
+    const current = parseRoute();
+    if (current.view === 'app') {
+      const app = byId.get(current.id);
+      if (app) renderDetail(app);
+    } else if (current.view === 'store') {
+      renderStore();
+    }
   }
 
   /* ---------------- 上传：口令 ---------------- */
@@ -1296,9 +1378,9 @@
     updateModeUi();
 
     $('#embedClose').addEventListener('click', closeEmbed);
+    $('#embedReload').addEventListener('click', reloadEmbed);
     $('#embedNewWindow').addEventListener('click', () => {
-      const src = embedFrame.getAttribute('src');
-      if (src && src !== 'about:blank') window.open(src, '_blank', 'noopener');
+      if (embedAppUrl) window.open(embedAppUrl, '_blank', 'noopener');
     });
     embedLayer.addEventListener('mousedown', event => {
       if (event.target === embedLayer) closeEmbed();
@@ -1341,6 +1423,7 @@
     updateStats();
     renderChips();
     route();
+    checkVersions();
   }
 
   init();
