@@ -63,6 +63,21 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 网页程序第一次打开要下载页面、脚本和音频，站内窗口会显示「正在加载…」。
 之后浏览器和应用自己的缓存会保留资源；支持离线的应用断网也能用。需要强制更新时，点站内窗口右上角的「刷新」。
 
+应用打开很快时，加载提示会延迟 200ms 才出现，避免只闪一下。
+
+### 应用就绪信号（可选）
+
+如果应用希望在「真正准备好」时再关闭加载提示，可以在页面里通知 AppBox：
+
+```js
+if (window.parent !== window) {
+  window.parent.postMessage({ type: 'appbox-ready', app: 'yingcitong' }, '*');
+}
+```
+
+`app` 用 `data/apps.json` 里的 `id`。AppBox 只接受来自当前嵌入窗口的消息；
+没有这个信号时，就回退到 iframe 的 load 事件。
+
 ## 三种程序类型
 
 | 类型 | 上传内容 | 访客看到 |

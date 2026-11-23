@@ -25,6 +25,7 @@
   let ghToken = '';
   let embedAppUrl = '';
   let embedAppId = '';
+  let embedLoadingTimer = null;
 
   const state = { query: '', category: '全部' };
   const VERSION_TTL = 5 * 60 * 1000;
@@ -483,20 +484,49 @@
 
   /* ---------------- 站内窗口 ---------------- */
 
+  function clearEmbedLoading() {
+    if (embedLoadingTimer) {
+      clearTimeout(embedLoadingTimer);
+      embedLoadingTimer = null;
+    }
+  }
+
+  function showEmbedLoading() {
+    clearEmbedLoading();
+    const el = $('#embedLoading');
+    if (!el) return;
+    el.hidden = true;
+    embedLoadingTimer = setTimeout(() => {
+      embedLoadingTimer = null;
+      if (
+        !embedLayer.hidden &&
+        embedFrame.getAttribute('src') !== 'about:blank'
+      ) {
+        el.hidden = false;
+      }
+    }, 200);
+  }
+
+  function hideEmbedLoading() {
+    clearEmbedLoading();
+    const el = $('#embedLoading');
+    if (el) el.hidden = true;
+  }
+
   function openEmbed(app) {
     embedAppId = app.id;
     embedAppUrl = app.url;
     $('#embedTitle').textContent = app.name;
     embedLayer.hidden = false;
     document.body.classList.add('no-scroll');
-    $('#embedLoading').hidden = false;
+    showEmbedLoading();
     embedFrame.src = app.url;
     $('#embedClose').focus();
   }
 
   function closeEmbed() {
     if (embedLayer.hidden) return;
-    $('#embedLoading').hidden = true;
+    hideEmbedLoading();
     embedLayer.hidden = true;
     embedFrame.src = 'about:blank';
     embedAppUrl = '';
@@ -508,7 +538,7 @@
     if (!embedAppUrl) return;
     const base = embedAppUrl.split('#')[0];
     const separator = base.indexOf('?') === -1 ? '?' : '&';
-    $('#embedLoading').hidden = false;
+    showEmbedLoading();
     embedFrame.src = base + separator + 'appbox_refresh=' + Date.now();
     if (embedAppId) {
       try {
@@ -1534,7 +1564,13 @@
     embedFrame.addEventListener('load', () => {
       if (embedLayer.hidden) return;
       const src = embedFrame.getAttribute('src');
-      if (src && src !== 'about:blank') $('#embedLoading').hidden = true;
+      if (src && src !== 'about:blank') hideEmbedLoading();
+    });
+    window.addEventListener('message', event => {
+      if (event.source !== embedFrame.contentWindow) return;
+      if (!event.data || typeof event.data !== 'object') return;
+      if (event.data.type !== 'appbox-ready') return;
+      if (!event.data.app || event.data.app === embedAppId) hideEmbedLoading();
     });
 
     const ua = navigator.userAgent || '';
