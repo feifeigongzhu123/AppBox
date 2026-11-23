@@ -3,7 +3,7 @@
     "id": "wuli",
     "name": "物理动画课",
     "tagline": "公式抽象、实验做不了？3 步动画把过程讲透",
-    "icon": "⚛",
+    "icon": "assets/icons/physics.svg",
     "accent": "#6d5efc",
     "category": "初高中通用",
     "tags": [
@@ -52,7 +52,7 @@
     "id": "yingcitong",
     "name": "英词通",
     "tagline": "背了就忘、发音不准？按教材单元听读、跟读、复习",
-    "icon": "Aa",
+    "icon": "assets/icons/english.svg",
     "accent": "#4f7cff",
     "category": "语言学习",
     "tags": [
@@ -101,7 +101,7 @@
     "id": "yuecitong",
     "name": "越词通",
     "tagline": "声调难、没语伴？每天 5 个词，带标准发音和间隔复习",
-    "icon": "越",
+    "icon": "assets/icons/vietnamese.svg",
     "accent": "#e8503a",
     "category": "语言学习",
     "tags": [
@@ -148,7 +148,7 @@
     "id": "huaxue",
     "name": "化学动画课",
     "tagline": "现象和反应记不住？动画 + 语音带你过一遍",
-    "icon": "⚗",
+    "icon": "assets/icons/chemistry.svg",
     "accent": "#17a673",
     "category": "初高中通用",
     "tags": [

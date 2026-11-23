@@ -378,10 +378,15 @@ main { flex: 1; }
   overflow: hidden;
 }
 
+.app-icon.has-img {
+  box-shadow: 0 10px 22px -12px rgba(20, 24, 36, 0.45);
+}
+
 .app-icon.has-img img {
-  width: 78%;
-  height: 78%;
-  object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .app-icon.big {
@@ -963,6 +968,35 @@ td:first-child { color: var(--text); white-space: nowrap; }
   gap: 12px;
   flex-wrap: wrap;
 }
+
+.footer-author { color: var(--muted); }
+
+.footer-author strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.disclaimer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.disclaimer p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.disclaimer strong { color: var(--text); }
+
+.disclaimer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.disclaimer a:hover { text-decoration: underline; }
 
 /* ---------------- 收藏引导 ---------------- */
 

@@ -98,7 +98,7 @@
       tint(accent, 0.2);
     const cls = 'app-icon' + (extraClass ? ' ' + extraClass : '');
     if (iconIsImage(app.icon)) {
-      return '<span class="' + cls + ' has-img" style="' + bg + '"><img src="' +
+      return '<span class="' + cls + ' has-img"><img src="' +
         esc(app.icon) + '" alt=""></span>';
     }
     return '<span class="' + cls + '" style="' + bg + '">' +
@@ -292,8 +292,8 @@
           '<span>' + esc(app.category || '未分类') + '</span>' +
           '<span class="card-foot-right">' +
             '<span class="card-usage" data-usage="' + esc(app.id) + '"' +
-              (app.usage ? '' : ' hidden') + ' title="全站累计打开次数">' +
-              (app.usage ? esc(app.usage) + ' 次' : '') +
+              (app.openCount ? '' : ' hidden') + ' title="全站累计打开次数">' +
+              (app.openCount ? esc(app.openCount) + ' 次' : '') +
             '</span>' +
             (app.free ? '<span class="badge free">全免费</span>' : '') +
             (app.featured ? '<span class="badge">推荐</span>' : '') +
@@ -418,8 +418,8 @@
       .join('');
 
     const usageText =
-      typeof app.usage === 'number'
-        ? (app.usage > 0 ? app.usage + ' 次' : '0 次')
+      typeof app.openCount === 'number'
+        ? (app.openCount > 0 ? app.openCount + ' 次' : '0 次')
         : '—';
     const usageRow =
       '<div class="meta-row"><dt>打开次数</dt><dd data-usage="' +
@@ -674,8 +674,8 @@
       apps.map(async app => {
         const cached = readUsageCache(app.id);
         if (cached !== null) {
-          if (app.usage !== cached) {
-            app.usage = cached;
+          if (app.openCount !== cached) {
+            app.openCount = cached;
             changed = true;
           }
           return;
@@ -685,7 +685,7 @@
             cache: 'no-store'
           });
           if (response.status === 404) {
-            app.usage = 0;
+            app.openCount = 0;
             writeUsageCache(app.id, 0);
             changed = true;
             return;
@@ -693,7 +693,7 @@
           if (!response.ok) return;
           const data = await response.json();
           if (data && typeof data.value === 'number') {
-            app.usage = data.value;
+            app.openCount = data.value;
             writeUsageCache(app.id, data.value);
             changed = true;
           }
@@ -705,7 +705,7 @@
 
     if (changed) {
       apps.forEach(app => {
-        if (typeof app.usage === 'number') paintUsage(app.id, app.usage);
+        if (typeof app.openCount === 'number') paintUsage(app.id, app.openCount);
       });
     }
   }
@@ -719,7 +719,7 @@
       if (!response.ok) return;
       const data = await response.json();
       if (data && typeof data.value === 'number') {
-        app.usage = data.value;
+        app.openCount = data.value;
         writeUsageCache(app.id, data.value);
         paintUsage(app.id, data.value);
       }
@@ -1492,6 +1492,8 @@
       CONFIG.subTagline || '程序存在 AppBox 里，打开就能用，每个都附带使用方法。';
     document.getElementById('footerText').textContent =
       CONFIG.footer || '个人程序盒子 · 持续更新中';
+    document.getElementById('footerAuthor').textContent =
+      CONFIG.author || '安得半日闲';
     document.getElementById('footerYear').textContent = new Date().getFullYear();
 
     let savedTheme = null;

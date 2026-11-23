@@ -15,6 +15,7 @@ window.APPBOX_CONFIG = {
   /* 站点名称，可自行修改 */
   siteName: 'AppBox',
   siteMark: '▦',
+  author: '安得半日闲',
   tagline: '我做的小程序，都放在这里',
   subTagline: '零广告 · 免注册 · 手机 / iPad 点开即用',
   footer: '个人程序盒子 · 持续更新中',

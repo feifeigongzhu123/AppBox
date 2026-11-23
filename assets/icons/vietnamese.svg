@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="越南语">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7f1d1d"/>
+      <stop offset="0.6" stop-color="#dc2626"/>
+      <stop offset="1" stop-color="#fb7185"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.12" r="0.85">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" fill="url(#bg)"/>
+  <rect width="128" height="128" fill="url(#glow)"/>
+  <path d="M64 24 L71.9 45.1 L94.4 46.1 L76.8 60.2 L82.8 81.9 L64 69.5 L45.2 81.9 L51.2 60.2 L33.6 46.1 L56.1 45.1 Z" fill="#facc15"/>
+  <text x="64" y="112" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="800" letter-spacing="3" fill="#ffffff" fill-opacity=".92">VN</text>
+</svg>
