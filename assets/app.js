@@ -28,6 +28,10 @@
 
   const state = { query: '', category: '全部' };
   const VERSION_TTL = 5 * 60 * 1000;
+  const USAGE_API = 'https://abacus.jasoncameron.dev';
+  const USAGE_NS = CONFIG.usageNamespace || 'feifeigongzhu123-appbox';
+  const USAGE_TTL = 3 * 60 * 1000;
+  const USAGE_CACHE = 'appbox-usage:' + USAGE_NS + ':';
 
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -267,8 +271,7 @@
           .join(' ')
           .toLowerCase();
         return haystack.indexOf(query) !== -1;
-      })
-      .sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
+      });
   }
 
   function cardHtml(app) {
@@ -286,7 +289,14 @@
         '<div class="card-foot">' +
           '<span class="cat-dot" style="background:' + esc(accent) + '"></span>' +
           '<span>' + esc(app.category || '未分类') + '</span>' +
-          (app.featured ? '<span class="badge">推荐</span>' : '') +
+          '<span class="card-foot-right">' +
+            '<span class="card-usage" data-usage="' + esc(app.id) + '"' +
+              (app.usage ? '' : ' hidden') + ' title="全站累计打开次数">' +
+              (app.usage ? esc(app.usage) + ' 次' : '') +
+            '</span>' +
+            (app.free ? '<span class="badge free">全免费</span>' : '') +
+            (app.featured ? '<span class="badge">推荐</span>' : '') +
+          '</span>' +
         '</div>' +
       '</a>'
     );
@@ -381,7 +391,7 @@
     if (app.url) {
       if (download) {
         actions +=
-          '<a class="btn primary" href="' + esc(app.url) + '" download>⬇ 下载程序' +
+          '<a class="btn primary" id="actDownload" href="' + esc(app.url) + '" download>⬇ 下载程序' +
           (app.size ? ' · ' + esc(formatBytes(app.size)) : '') +
           '</a>';
       } else {
@@ -406,6 +416,14 @@
       )
       .join('');
 
+    const usageText =
+      typeof app.usage === 'number'
+        ? (app.usage > 0 ? app.usage + ' 次' : '0 次')
+        : '—';
+    const usageRow =
+      '<div class="meta-row"><dt>打开次数</dt><dd data-usage="' +
+      esc(app.id) + '" title="全站累计打开次数">' + usageText + '</dd></div>';
+
     $('#view-app').innerHTML =
       '<div class="wrap detail">' +
         '<a class="back" href="#/">← 返回商店</a>' +
@@ -426,7 +444,7 @@
           '</article>' +
           '<aside class="panel side">' +
             (tips ? '<h3>小提示</h3><ul class="tips">' + tips + '</ul>' : '') +
-            '<dl class="meta">' + metaHtml + '</dl>' +
+            '<dl class="meta">' + metaHtml + usageRow + '</dl>' +
           '</aside>' +
         '</div>' +
       '</div>';
@@ -438,6 +456,7 @@
     const openBtn = $('#actOpen');
     if (openBtn) {
       openBtn.addEventListener('click', () => {
+        hitUsage(app);
         if (canEmbed) openEmbed(app);
         else if (app.url) window.open(app.url, '_blank', 'noopener');
       });
@@ -446,8 +465,14 @@
     const windowBtn = $('#actWindow');
     if (windowBtn) {
       windowBtn.addEventListener('click', () => {
+        hitUsage(app);
         if (app.url) window.open(app.url, '_blank', 'noopener');
       });
+    }
+
+    const downloadBtn = $('#actDownload');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => hitUsage(app));
     }
 
     const copyBtn = $('#actCopy');
@@ -462,14 +487,16 @@
     embedAppId = app.id;
     embedAppUrl = app.url;
     $('#embedTitle').textContent = app.name;
-    embedFrame.src = app.url;
     embedLayer.hidden = false;
     document.body.classList.add('no-scroll');
+    $('#embedLoading').hidden = false;
+    embedFrame.src = app.url;
     $('#embedClose').focus();
   }
 
   function closeEmbed() {
     if (embedLayer.hidden) return;
+    $('#embedLoading').hidden = true;
     embedLayer.hidden = true;
     embedFrame.src = 'about:blank';
     embedAppUrl = '';
@@ -481,6 +508,7 @@
     if (!embedAppUrl) return;
     const base = embedAppUrl.split('#')[0];
     const separator = base.indexOf('?') === -1 ? '?' : '&';
+    $('#embedLoading').hidden = false;
     embedFrame.src = base + separator + 'appbox_refresh=' + Date.now();
     if (embedAppId) {
       try {
@@ -552,6 +580,121 @@
       if (app) renderDetail(app);
     } else if (current.view === 'store') {
       renderStore();
+    }
+  }
+
+  /* ---------------- 使用次数 ---------------- */
+
+  function usageUrl(action, id) {
+    return (
+      USAGE_API +
+      '/' +
+      action +
+      '/' +
+      encodeURIComponent(USAGE_NS) +
+      '/' +
+      encodeURIComponent(id)
+    );
+  }
+
+  function readUsageCache(id) {
+    try {
+      const raw = sessionStorage.getItem(USAGE_CACHE + id);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (
+        data &&
+        typeof data.value === 'number' &&
+        Date.now() - data.t < USAGE_TTL
+      ) {
+        return data.value;
+      }
+    } catch (err) {
+      /* ignore */
+    }
+    return null;
+  }
+
+  function writeUsageCache(id, value) {
+    try {
+      sessionStorage.setItem(
+        USAGE_CACHE + id,
+        JSON.stringify({ value: value, t: Date.now() })
+      );
+    } catch (err) {
+      /* ignore */
+    }
+  }
+
+  function paintUsage(id, value) {
+    const text = value > 0 ? value + ' 次' : '0 次';
+    document.querySelectorAll('[data-usage="' + id + '"]').forEach(el => {
+      if (el.classList.contains('card-usage')) {
+        el.textContent = value > 0 ? value + ' 次' : '';
+        el.hidden = !value;
+      } else {
+        el.textContent = text;
+      }
+    });
+  }
+
+  async function loadUsage() {
+    let changed = false;
+    await Promise.all(
+      apps.map(async app => {
+        const cached = readUsageCache(app.id);
+        if (cached !== null) {
+          if (app.usage !== cached) {
+            app.usage = cached;
+            changed = true;
+          }
+          return;
+        }
+        try {
+          const response = await fetch(usageUrl('get', app.id), {
+            cache: 'no-store'
+          });
+          if (response.status === 404) {
+            app.usage = 0;
+            writeUsageCache(app.id, 0);
+            changed = true;
+            return;
+          }
+          if (!response.ok) return;
+          const data = await response.json();
+          if (data && typeof data.value === 'number') {
+            app.usage = data.value;
+            writeUsageCache(app.id, data.value);
+            changed = true;
+          }
+        } catch (err) {
+          /* 统计服务不可用时不影响页面 */
+        }
+      })
+    );
+
+    if (changed) {
+      apps.forEach(app => {
+        if (typeof app.usage === 'number') paintUsage(app.id, app.usage);
+      });
+    }
+  }
+
+  async function hitUsage(app) {
+    if (!app || !app.id) return;
+    try {
+      const response = await fetch(usageUrl('hit', app.id), {
+        cache: 'no-store'
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (data && typeof data.value === 'number') {
+        app.usage = data.value;
+        writeUsageCache(app.id, data.value);
+        paintUsage(app.id, data.value);
+      }
+    } catch (err) {
+      /* 统计失败不影响打开 */
     }
   }
 
@@ -1388,6 +1531,24 @@
     embedLayer.addEventListener('mousedown', event => {
       if (event.target === embedLayer) closeEmbed();
     });
+    embedFrame.addEventListener('load', () => {
+      if (embedLayer.hidden) return;
+      const src = embedFrame.getAttribute('src');
+      if (src && src !== 'about:blank') $('#embedLoading').hidden = true;
+    });
+
+    const ua = navigator.userAgent || '';
+    const platform = /iPad|iPhone|iPod/i.test(ua)
+      ? 'ios'
+      : /Android/i.test(ua)
+      ? 'android'
+      : 'desktop';
+    $$('.save-way').forEach(el => {
+      el.classList.toggle('is-current', el.dataset.platform === platform);
+    });
+    $('#copySiteBtn').addEventListener('click', () => {
+      copyText(location.href.split('#')[0]);
+    });
 
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') closeEmbed();
@@ -1427,6 +1588,7 @@
     renderChips();
     route();
     checkVersions();
+    loadUsage();
   }
 
   init();

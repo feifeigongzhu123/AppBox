@@ -16,8 +16,11 @@ window.APPBOX_CONFIG = {
   siteName: 'AppBox',
   siteMark: '▦',
   tagline: '我做的小程序，都放在这里',
-  subTagline: '程序存在 AppBox 里，打开就能用，每个都附带使用方法。',
+  subTagline: '零广告 · 免注册 · 手机 / iPad 点开即用',
   footer: '个人程序盒子 · 持续更新中',
+
+  /* 公开计数器（Abacus）：用于统计每个程序的打开次数，无需注册 */
+  usageNamespace: 'feifeigongzhu123-appbox-store',
 
   /* GitHub 仓库信息：上线前填成你自己的 */
   owner: 'feifeigongzhu123',

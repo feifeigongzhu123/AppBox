@@ -39,7 +39,7 @@
         <section class="hero">
           <p class="hero-kicker">PERSONAL APP STORE</p>
           <h1>我做的小程序<br><span class="grad">都放在这里</span></h1>
-          <p class="hero-sub" id="heroSub">程序存在 AppBox 里，打开就能用，每个都附带使用方法。</p>
+          <p class="hero-sub" id="heroSub">零广告 · 免注册 · 手机 / iPad 点开即用</p>
           <div class="hero-stats">
             <div class="stat"><strong id="statApps">0</strong><span>个程序</span></div>
             <div class="stat"><strong id="statCats">0</strong><span>个分类</span></div>
@@ -351,6 +351,10 @@
             <dd>在「上传」页用同一个链接标识重新提交，旧条目和文件会被覆盖。只想改介绍文字，也可以重新填写信息后提交。</dd>
             <dt>嵌入的应用升级后，AppBox 会自动更新吗？</dt>
             <dd>应用本身是直接加载原网址，升级发布后打开就是新版；AppBox 还会读取各站点的 VERSION 文件，自动更新详情页显示的版本号。浏览器或 Service Worker 可能缓存旧资源，必要时点站内窗口的「刷新」。</dd>
+            <dt>第一次打开为什么慢？</dt>
+            <dd>第一次要下载页面、脚本和音频，站内窗口会显示「正在加载…」。之后浏览器和应用自己的缓存会保留资源；支持离线的应用断网也能用。看到旧页面就点右上角「刷新」。</dd>
+            <dt>卡片上的「打开次数」怎么算？</dt>
+            <dd>按点击「打开程序」的次数累计，用的是公开计数器，不需要注册。同一个人多次打开会重复计数，不是独立访客数。</dd>
             <dt>上传的文件存在哪？怎么备份？</dt>
             <dd>网页程序在 <code>apps/</code>，下载文件在 <code>files/</code>，信息在 <code>data/apps.json</code>，都在仓库里。备份就是 <code>git clone</code> 或复制整个项目。</dd>
             <dt>密码能真正保护上传吗？</dt>
@@ -362,6 +366,30 @@
       </div>
     </section>
   </main>
+
+  <section class="save-hint" aria-label="收藏 AppBox">
+    <div class="wrap save-inner">
+      <div class="save-copy">
+        <h2>把 AppBox 放到桌面，下次不迷路</h2>
+        <p>零广告 · 免注册，收藏后随时打开。</p>
+      </div>
+      <div class="save-ways">
+        <div class="save-way" data-platform="ios">
+          <strong>iPhone / iPad</strong>
+          <span>Safari 分享 → 添加到主屏幕</span>
+        </div>
+        <div class="save-way" data-platform="android">
+          <strong>Android</strong>
+          <span>Chrome 菜单 → 安装应用 / 添加到主屏幕</span>
+        </div>
+        <div class="save-way" data-platform="desktop">
+          <strong>电脑</strong>
+          <span>Ctrl + D 收藏，或把地址拖到桌面</span>
+        </div>
+      </div>
+      <button class="btn ghost" id="copySiteBtn" type="button">复制网址</button>
+    </div>
+  </section>
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
@@ -382,7 +410,14 @@
           <button class="btn primary sm" id="embedClose" type="button">关闭</button>
         </div>
       </div>
-      <iframe class="embed-frame" id="embedFrame" src="about:blank" title="程序窗口" allow="autoplay; microphone; fullscreen; clipboard-write; encrypted-media" allowfullscreen></iframe>
+      <div class="embed-frame-wrap">
+        <iframe class="embed-frame" id="embedFrame" src="about:blank" title="程序窗口" allow="autoplay; microphone; fullscreen; clipboard-write; encrypted-media" allowfullscreen></iframe>
+        <div class="embed-loading" id="embedLoading" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <p class="embed-loading-title">正在加载…</p>
+          <p class="embed-loading-sub">仅首次打开较慢，之后会自动缓存；支持离线的应用断网也能用。</p>
+        </div>
+      </div>
     </div>
   </div>
 
