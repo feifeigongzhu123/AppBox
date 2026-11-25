@@ -49,12 +49,61 @@
     "free": true
   },
   {
+    "id": "huaxue",
+    "name": "化学动画课",
+    "tagline": "现象和反应记不住？动画 + 语音带你过一遍",
+    "icon": "assets/icons/chemistry.svg",
+    "accent": "#17a673",
+    "category": "初高中通用",
+    "tags": [
+      "化学",
+      "初中",
+      "高中",
+      "动画",
+      "练习"
+    ],
+    "kind": "web",
+    "url": "https://feifeigongzhu123.github.io/chemistry-course/",
+    "versionUrl": "https://feifeigongzhu123.github.io/chemistry-course/VERSION",
+    "embed": true,
+    "featured": false,
+    "description": "初中到高三的化学动画精讲，共 78 个知识点：初中 33 点、高一 23 点、高二 8 点、高三 14 点。每个知识点有 3 步动画、语音讲解和 5 道练习题，适合预习和复习。",
+    "usage": [
+      {
+        "title": "选学段",
+        "text": "在首页选择初中、高一、高二或高三。"
+      },
+      {
+        "title": "看动画",
+        "text": "按章节进入知识点，点播放，动画和语音会逐步讲解。"
+      },
+      {
+        "title": "做练习",
+        "text": "完成 5 道题，查看逐项解析。"
+      },
+      {
+        "title": "回顾",
+        "text": "已学知识点和错题会记录在本机，可以随时回顾。"
+      }
+    ],
+    "tips": [
+      "手机端实验台可以左右滑动，讲解时会自动定位到当前区域。",
+      "学段首页可以下载整学段语音，离线也能听。",
+      "题目是真题改编，不是原卷。"
+    ],
+    "version": "1.2.0",
+    "updated": "2026-11-19",
+    "size": 0,
+    "download": false,
+    "free": true
+  },
+  {
     "id": "yingcitong",
-    "name": "英词通",
+    "name": "英语背单词",
     "tagline": "背了就忘、发音不准？按教材单元听读、跟读、复习",
     "icon": "assets/icons/english.svg",
     "accent": "#4f7cff",
-    "category": "语言学习",
+    "category": "初高中通用",
     "tags": [
       "英语",
       "单词",
@@ -67,7 +116,7 @@
     "url": "https://feifeigongzhu123.github.io/english-daily/",
     "versionUrl": "https://feifeigongzhu123.github.io/english-daily/VERSION",
     "embed": true,
-    "featured": true,
+    "featured": false,
     "description": "外研版初中、高中英语词汇听读与课文跟读工具。内置 18 册、135 个单元、约 5200 个词条，把看单词、听发音、跟读、复习和每日打卡放在一个页面里；学习记录只保存在本机。",
     "usage": [
       {
@@ -95,7 +144,8 @@
     "version": "1.9.0",
     "updated": "2026-11-19",
     "size": 0,
-    "download": false
+    "download": false,
+    "free": true
   },
   {
     "id": "yuecitong",
@@ -145,52 +195,50 @@
     "download": false
   },
   {
-    "id": "huaxue",
-    "name": "化学动画课",
-    "tagline": "现象和反应记不住？动画 + 语音带你过一遍",
-    "icon": "assets/icons/chemistry.svg",
-    "accent": "#17a673",
-    "category": "初高中通用",
+    "id": "qingyun",
+    "name": "青云策",
+    "tagline": "分数够不够、冲稳保怎么填？历年录取数据查一查",
+    "icon": "assets/icons/qingyun.svg",
+    "accent": "#2563eb",
+    "category": "高考志愿",
     "tags": [
-      "化学",
-      "初中",
-      "高中",
-      "动画",
-      "练习"
+      "辽宁",
+      "高考",
+      "志愿",
+      "录取数据",
+      "选科"
     ],
     "kind": "web",
-    "url": "https://feifeigongzhu123.github.io/chemistry-course/",
-    "versionUrl": "https://feifeigongzhu123.github.io/chemistry-course/VERSION",
+    "url": "https://feifeigongzhu123.github.io/qingyun-ce/",
     "embed": true,
     "featured": false,
-    "description": "初中到高三的化学动画精讲，共 78 个知识点：初中 33 点、高一 23 点、高二 8 点、高三 14 点。每个知识点有 3 步动画、语音讲解和 5 道练习题，适合预习和复习。",
+    "free": true,
+    "description": "辽宁高考志愿参考工具，汇总 2022–2025 年录取数据。输入分数和选科，按省份、院校层次、专业、冲稳保等条件筛选，查看院校专业的最低分、最低位次和分差。",
     "usage": [
       {
-        "title": "选学段",
-        "text": "在首页选择初中、高一、高二或高三。"
+        "title": "填写考生信息",
+        "text": "输入高考分数，选择首选科目和两门再选科目。"
       },
       {
-        "title": "看动画",
-        "text": "按章节进入知识点，点播放，动画和语音会逐步讲解。"
+        "title": "设置筛选条件",
+        "text": "可以按省份、学校性质、批次、专业关键字、985/211、中外合作等筛选。"
       },
       {
-        "title": "做练习",
-        "text": "完成 5 道题，查看逐项解析。"
+        "title": "选择冲稳保",
+        "text": "设置只看可录取、仅冲/稳/保，或调整冲稳保的分差范围。"
       },
       {
-        "title": "回顾",
-        "text": "已学知识点和错题会记录在本机，可以随时回顾。"
+        "title": "查看结果",
+        "text": "在结果表里对比院校、专业、最低分、最低位次和分差，作为志愿参考。"
       }
     ],
     "tips": [
-      "手机端实验台可以左右滑动，讲解时会自动定位到当前区域。",
-      "学段首页可以下载整学段语音，离线也能听。",
-      "题目是真题改编，不是原卷。"
+      "数据是 2022–2025 年录取参考，不替代省考试院和院校当年的官方招生计划。",
+      "冲稳保分差默认 ±15 分，可以根据自己的风险偏好调整。",
+      "填报前请以辽宁省考试院和院校官方信息为准。"
     ],
-    "version": "1.2.0",
-    "updated": "2026-11-19",
+    "updated": "2026-11-23",
     "size": 0,
-    "download": false,
-    "free": true
+    "download": false
   }
 ]

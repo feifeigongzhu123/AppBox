@@ -20,8 +20,10 @@ window.APPBOX_CONFIG = {
   subTagline: '零广告 · 免注册 · 手机 / iPad 点开即用',
   footer: '个人程序盒子 · 持续更新中',
 
-  /* 公开计数器（Abacus）：用于统计每个程序的打开次数，无需注册 */
-  usageNamespace: 'feifeigongzhu123-appbox-store',
+  /* 点击统计的虚拟路径前缀；Vercount 按路径区分程序 */
+  statsBase: 'https://feifeigongzhu123.github.io/AppBox/',
+
+  /* 点击次数使用 Vercount 公开计数器，无需额外配置 */
 
   /* GitHub 仓库信息：上线前填成你自己的 */
   owner: 'feifeigongzhu123',

@@ -29,10 +29,9 @@
 
   const state = { query: '', category: '全部' };
   const VERSION_TTL = 5 * 60 * 1000;
-  const USAGE_API = 'https://abacus.jasoncameron.dev';
-  const USAGE_NS = CONFIG.usageNamespace || 'feifeigongzhu123-appbox';
-  const USAGE_TTL = 3 * 60 * 1000;
-  const USAGE_CACHE = 'appbox-usage:' + USAGE_NS + ':';
+  const STATS_API = 'https://events.vercount.one/api/v2/log';
+  const STATS_TIMEOUT = 5000;
+  const CLICK_CACHE = 'appbox-clicks:';
 
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -292,8 +291,8 @@
           '<span>' + esc(app.category || '未分类') + '</span>' +
           '<span class="card-foot-right">' +
             '<span class="card-usage" data-usage="' + esc(app.id) + '"' +
-              (app.openCount ? '' : ' hidden') + ' title="全站累计打开次数">' +
-              (app.openCount ? esc(app.openCount) + ' 次' : '') +
+              (app.clicks ? '' : ' hidden') + ' title="全站累计点击次数">' +
+              (app.clicks ? esc(app.clicks) + ' 次' : '') +
             '</span>' +
             (app.free ? '<span class="badge free">全免费</span>' : '') +
             (app.featured ? '<span class="badge">推荐</span>' : '') +
@@ -418,12 +417,12 @@
       .join('');
 
     const usageText =
-      typeof app.openCount === 'number'
-        ? (app.openCount > 0 ? app.openCount + ' 次' : '0 次')
+      typeof app.clicks === 'number'
+        ? (app.clicks > 0 ? app.clicks + ' 次' : '0 次')
         : '—';
     const usageRow =
-      '<div class="meta-row"><dt>打开次数</dt><dd data-usage="' +
-      esc(app.id) + '" title="全站累计打开次数">' + usageText + '</dd></div>';
+      '<div class="meta-row"><dt>点击次数</dt><dd data-usage="' +
+      esc(app.id) + '" title="全站累计点击次数">' + usageText + '</dd></div>';
 
     $('#view-app').innerHTML =
       '<div class="wrap detail">' +
@@ -457,7 +456,6 @@
     const openBtn = $('#actOpen');
     if (openBtn) {
       openBtn.addEventListener('click', () => {
-        hitUsage(app);
         if (canEmbed) openEmbed(app);
         else if (app.url) window.open(app.url, '_blank', 'noopener');
       });
@@ -466,14 +464,8 @@
     const windowBtn = $('#actWindow');
     if (windowBtn) {
       windowBtn.addEventListener('click', () => {
-        hitUsage(app);
         if (app.url) window.open(app.url, '_blank', 'noopener');
       });
-    }
-
-    const downloadBtn = $('#actDownload');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => hitUsage(app));
     }
 
     const copyBtn = $('#actCopy');
@@ -613,42 +605,24 @@
     }
   }
 
-  /* ---------------- 使用次数 ---------------- */
+  /* ---------------- 点击次数（Vercount，无需注册） ---------------- */
 
-  function usageUrl(action, id) {
-    return (
-      USAGE_API +
-      '/' +
-      action +
-      '/' +
-      encodeURIComponent(USAGE_NS) +
-      '/' +
-      encodeURIComponent(id)
-    );
-  }
-
-  function readUsageCache(id) {
+  function readClickCount(id) {
     try {
-      const raw = sessionStorage.getItem(USAGE_CACHE + id);
+      const raw = localStorage.getItem(CLICK_CACHE + id);
       if (!raw) return null;
       const data = JSON.parse(raw);
-      if (
-        data &&
-        typeof data.value === 'number' &&
-        Date.now() - data.t < USAGE_TTL
-      ) {
-        return data.value;
-      }
+      if (data && typeof data.value === 'number') return data.value;
     } catch (err) {
       /* ignore */
     }
     return null;
   }
 
-  function writeUsageCache(id, value) {
+  function writeClickCount(id, value) {
     try {
-      sessionStorage.setItem(
-        USAGE_CACHE + id,
+      localStorage.setItem(
+        CLICK_CACHE + id,
         JSON.stringify({ value: value, t: Date.now() })
       );
     } catch (err) {
@@ -656,7 +630,7 @@
     }
   }
 
-  function paintUsage(id, value) {
+  function paintClicks(id, value) {
     const text = value > 0 ? value + ' 次' : '0 次';
     document.querySelectorAll('[data-usage="' + id + '"]').forEach(el => {
       if (el.classList.contains('card-usage')) {
@@ -668,63 +642,67 @@
     });
   }
 
-  async function loadUsage() {
-    let changed = false;
-    await Promise.all(
-      apps.map(async app => {
-        const cached = readUsageCache(app.id);
-        if (cached !== null) {
-          if (app.openCount !== cached) {
-            app.openCount = cached;
-            changed = true;
-          }
-          return;
-        }
-        try {
-          const response = await fetch(usageUrl('get', app.id), {
-            cache: 'no-store'
-          });
-          if (response.status === 404) {
-            app.openCount = 0;
-            writeUsageCache(app.id, 0);
-            changed = true;
-            return;
-          }
-          if (!response.ok) return;
-          const data = await response.json();
-          if (data && typeof data.value === 'number') {
-            app.openCount = data.value;
-            writeUsageCache(app.id, data.value);
-            changed = true;
-          }
-        } catch (err) {
-          /* 统计服务不可用时不影响页面 */
-        }
-      })
-    );
+  function clickStatsUrl(app) {
+    const base = (CONFIG.statsBase || location.origin + location.pathname)
+      .replace(/\/+$/, '');
+    return base + '/stats/' + encodeURIComponent(app.id);
+  }
 
+  function loadCachedClicks() {
+    let changed = false;
+    apps.forEach(app => {
+      const cached = readClickCount(app.id);
+      if (cached !== null) {
+        app.clicks = cached;
+        changed = true;
+      }
+    });
     if (changed) {
       apps.forEach(app => {
-        if (typeof app.openCount === 'number') paintUsage(app.id, app.openCount);
+        if (typeof app.clicks === 'number') paintClicks(app.id, app.clicks);
       });
     }
   }
 
-  async function hitUsage(app) {
-    if (!app || !app.id) return;
+  async function postClickStats(url) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), STATS_TIMEOUT);
     try {
-      const response = await fetch(usageUrl('hit', app.id), {
-        cache: 'no-store'
+      const response = await fetch(STATS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url, isNewUv: false }),
+        signal: controller.signal
       });
-      if (!response.ok) return;
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       const data = await response.json();
-      if (data && typeof data.value === 'number') {
-        app.openCount = data.value;
-        writeUsageCache(app.id, data.value);
-        paintUsage(app.id, data.value);
+      const value = data && data.data ? Number(data.data.page_pv) : NaN;
+      return Number.isFinite(value) ? value : null;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function trackClick(app) {
+    if (!app || !app.id) return;
+    const cached = readClickCount(app.id);
+    if (cached !== null) {
+      app.clicks = cached;
+      paintClicks(app.id, cached);
+    }
+    try {
+      let value = await postClickStats(clickStatsUrl(app));
+      if (value === null) {
+        await new Promise(resolve => setTimeout(resolve, 700));
+        value = await postClickStats(clickStatsUrl(app));
+      }
+      if (value !== null) {
+        app.clicks = value;
+        writeClickCount(app.id, value);
+        paintClicks(app.id, value);
       }
     } catch (err) {
-      /* 统计失败不影响打开 */
+      /* 统计失败时保留缓存值，不影响页面 */
     }
   }
 
@@ -1468,6 +1446,7 @@
         return;
       }
       renderDetail(app);
+      trackClick(app);
       document.title = app.name + ' · ' + (CONFIG.siteName || 'AppBox');
     } else if (current.view === 'guide') {
       document.title = '使用指南 · ' + (CONFIG.siteName || 'AppBox');
@@ -1626,7 +1605,7 @@
     renderChips();
     route();
     checkVersions();
-    loadUsage();
+    loadCachedClicks();
   }
 
   init();

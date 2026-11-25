@@ -43,12 +43,13 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 
 | 程序 | 地址 | 打开方式 |
 | --- | --- | --- |
-| 英词通 1.9.0 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
-| 越词通 1.1.0 | https://feifeigongzhu123.github.io/viet-daily/ | 站内嵌入 / 新窗口 |
-| 化学动画课 1.2.0 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
 | 物理动画课 1.0.0 | https://feifeigongzhu123.github.io/physics-course/ | 站内嵌入 / 新窗口 |
+| 化学动画课 1.2.0 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
+| 英语背单词 1.9.0 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
+| 越词通 1.1.0 | https://feifeigongzhu123.github.io/viet-daily/ | 站内嵌入 / 新窗口 |
+| 青云策 | https://feifeigongzhu123.github.io/qingyun-ce/ | 站内嵌入 / 新窗口 |
 
-这四个程序已经部署在同一个 GitHub Pages 账号下，AppBox 只负责展示、搜索和使用说明。
+这五个程序已经部署在同一个 GitHub Pages 账号下，AppBox 只负责展示、搜索和使用说明。
 `data/apps.json` 里它们的 `kind` 是 `web`，`url` 是完整网址，所以详情页会优先在站内窗口打开。
 
 详情页会读取各站点的 `VERSION` 文件，自动更新显示的版本号。应用内容本身是直接嵌入原网址，
@@ -56,9 +57,10 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 
 ## 使用统计
 
-卡片和详情页的「打开次数」来自 [Abacus](https://abacus.jasoncameron.dev) 公共计数器，无需注册、没有 Cookie。
-它按「点击打开程序」累计，同一个人多次打开会重复计数，**不是独立访客数**；统计服务不可用时页面不受影响，只是不显示数字。
-想从 0 重新计数时，改 `assets/config.js` 里的 `usageNamespace` 即可。
+卡片和详情页的「点击次数」来自 [Vercount](https://vercount.one) 公共计数器，无需注册、没有 Cookie。
+按进入程序详情页的次数累计；同一人多次进入会重复计数，**不是独立访客数**。
+数字会缓存在本机，统计服务不可用时保留上次结果或显示「—」，不影响页面。
+新访客第一次看不到数字时，进入一次程序详情就会获取并显示。
 
 ## 首次打开较慢
 

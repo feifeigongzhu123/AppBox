@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="高考志愿">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071a3a"/>
+      <stop offset="0.55" stop-color="#1e3a8a"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.7" cy="0.12" r="0.8">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="128" height="128" fill="url(#bg)"/>
+  <rect width="128" height="128" fill="url(#glow)"/>
+  <g fill="#ffffff" fill-opacity=".35">
+    <circle cx="22" cy="28" r="1.6"/>
+    <circle cx="36" cy="18" r="1.1"/>
+    <circle cx="96" cy="20" r="1.4"/>
+    <circle cx="110" cy="42" r="1.1"/>
+  </g>
+  <path d="M25 95c-9 0-15-6-15-14s6-14 15-14c3-10 12-17 23-17 13 0 23 9 25 21 8 1 14 7 14 15 0 9-7 17-17 17H25z" fill="#e0f2fe" fill-opacity=".93"/>
+  <path d="M50 88 L78 50 L94 64 L117 31" fill="none" stroke="#fbbf24" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M103 31 H117 V45" fill="none" stroke="#fbbf24" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="117" cy="31" r="4.5" fill="#fef3c7"/>
+</svg>

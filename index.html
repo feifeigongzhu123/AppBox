@@ -124,7 +124,7 @@
             </label>
             <label class="field">
               <span>名称</span>
-              <input id="fName" maxlength="60" placeholder="例如：英词通">
+              <input id="fName" maxlength="60" placeholder="例如：英语背单词">
             </label>
             <label class="field">
               <span>链接标识</span>
@@ -354,8 +354,8 @@
             <dd>应用本身是直接加载原网址，升级发布后打开就是新版；AppBox 还会读取各站点的 VERSION 文件，自动更新详情页显示的版本号。浏览器或 Service Worker 可能缓存旧资源，必要时点站内窗口的「刷新」。</dd>
             <dt>第一次打开为什么慢？</dt>
             <dd>第一次要下载页面、脚本和音频，站内窗口会显示「正在加载…」。之后浏览器和应用自己的缓存会保留资源；支持离线的应用断网也能用。看到旧页面就点右上角「刷新」。</dd>
-            <dt>卡片上的「打开次数」怎么算？</dt>
-            <dd>按点击「打开程序」的次数累计，用的是公开计数器，不需要注册。同一个人多次打开会重复计数，不是独立访客数。</dd>
+            <dt>卡片上的「点击次数」怎么算？</dt>
+            <dd>按进入程序详情页的次数累计，使用 Vercount 公开计数器，不需要注册。同一人多次进入会重复计数，不是独立访客数；数字会缓存在本机，统计服务不可用时保留上次结果或显示「—」。</dd>
             <dt>上传的文件存在哪？怎么备份？</dt>
             <dd>网页程序在 <code>apps/</code>，下载文件在 <code>files/</code>，信息在 <code>data/apps.json</code>，都在仓库里。备份就是 <code>git clone</code> 或复制整个项目。</dd>
             <dt>密码能真正保护上传吗？</dt>
