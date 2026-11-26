@@ -22,6 +22,8 @@ window.APPBOX_CONFIG = {
 
   /* 点击统计的虚拟路径前缀；Vercount 按路径区分程序 */
   statsBase: 'https://feifeigongzhu123.github.io/AppBox/',
+  /* 改一个值即可从 0 重新统计 */
+  statsVersion: '20261126',
 
   /* 点击次数使用 Vercount 公开计数器，无需额外配置 */
 

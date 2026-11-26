@@ -645,7 +645,13 @@
   function clickStatsUrl(app) {
     const base = (CONFIG.statsBase || location.origin + location.pathname)
       .replace(/\/+$/, '');
-    return base + '/stats/' + encodeURIComponent(app.id);
+    return (
+      base +
+      '/stats/' +
+      encodeURIComponent(CONFIG.statsVersion || 'v1') +
+      '/' +
+      encodeURIComponent(app.id)
+    );
   }
 
   function loadCachedClicks() {

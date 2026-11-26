@@ -43,11 +43,11 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 
 | 程序 | 地址 | 打开方式 |
 | --- | --- | --- |
+| 青云策 build 1126f | https://feifeigongzhu123.github.io/qingyun-ce/ | 站内嵌入 / 新窗口 |
 | 物理动画课 1.0.0 | https://feifeigongzhu123.github.io/physics-course/ | 站内嵌入 / 新窗口 |
 | 化学动画课 1.2.0 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
 | 英语背单词 1.9.0 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |
 | 越词通 1.1.0 | https://feifeigongzhu123.github.io/viet-daily/ | 站内嵌入 / 新窗口 |
-| 青云策 | https://feifeigongzhu123.github.io/qingyun-ce/ | 站内嵌入 / 新窗口 |
 
 这五个程序已经部署在同一个 GitHub Pages 账号下，AppBox 只负责展示、搜索和使用说明。
 `data/apps.json` 里它们的 `kind` 是 `web`，`url` 是完整网址，所以详情页会优先在站内窗口打开。
@@ -61,6 +61,7 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 按进入程序详情页的次数累计；同一人多次进入会重复计数，**不是独立访客数**。
 数字会缓存在本机，统计服务不可用时保留上次结果或显示「—」，不影响页面。
 新访客第一次看不到数字时，进入一次程序详情就会获取并显示。
+计数路径带 `statsVersion`（`assets/config.js`），换一个值即可从 0 重新统计。
 
 ## 首次打开较慢
 
