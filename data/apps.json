@@ -1,9 +1,9 @@
 [
   {
-    "id": "qingyun",
-    "name": "青云策",
+    "id": "zhiyuanbao",
+    "name": "志愿宝",
     "tagline": "分数够不够、冲稳保怎么填？用 2022–2025 录取数据查一查",
-    "icon": "assets/icons/qingyun.svg",
+    "icon": "assets/icons/zhiyuanbao.svg",
     "accent": "#2563eb",
     "category": "高考志愿",
     "tags": [
@@ -14,7 +14,7 @@
       "选科"
     ],
     "kind": "web",
-    "url": "https://feifeigongzhu123.github.io/qingyun-ce/",
+    "url": "https://feifeigongzhu123.github.io/zhiyuanbao/",
     "embed": true,
     "featured": false,
     "free": true,

@@ -43,7 +43,7 @@ python -c "import hashlib;print(hashlib.sha256(('appbox-v1:'+'新密码').encode
 
 | 程序 | 地址 | 打开方式 |
 | --- | --- | --- |
-| 青云策 build 1126f | https://feifeigongzhu123.github.io/qingyun-ce/ | 站内嵌入 / 新窗口 |
+| 志愿宝 build 1126f | https://feifeigongzhu123.github.io/zhiyuanbao/ | 站内嵌入 / 新窗口 |
 | 物理动画课 1.0.0 | https://feifeigongzhu123.github.io/physics-course/ | 站内嵌入 / 新窗口 |
 | 化学动画课 1.2.0 | https://feifeigongzhu123.github.io/chemistry-course/ | 站内嵌入 / 新窗口 |
 | 英语背单词 1.9.0 | https://feifeigongzhu123.github.io/english-daily/ | 站内嵌入 / 新窗口 |

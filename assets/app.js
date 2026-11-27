@@ -32,6 +32,7 @@
   const STATS_API = 'https://events.vercount.one/api/v2/log';
   const STATS_TIMEOUT = 5000;
   const CLICK_CACHE = 'appbox-clicks:';
+  const APP_ALIASES = { qingyun: 'zhiyuanbao' };
 
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -1447,6 +1448,12 @@
 
     if (current.view === 'app') {
       const app = byId.get(current.id);
+      if (!app && APP_ALIASES[current.id]) {
+        location.replace(
+          '#/app/' + encodeURIComponent(APP_ALIASES[current.id])
+        );
+        return;
+      }
       if (!app) {
         location.replace('#/');
         return;
